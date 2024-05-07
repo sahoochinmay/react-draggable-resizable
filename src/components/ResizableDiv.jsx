@@ -9,10 +9,10 @@ const DraggableResizableDiv = () => {
   const handleDown = (e, resize = false) => {
     const clientX = e.clientX || e.touches[0].clientX;
     const clientY = e.clientY || e.touches[0].clientY;
-    if (resize) {
-      e.preventDefault(); // Prevent default on resize touchstart
-    }
     if (resize || e.touches) {
+      e.preventDefault(); // Prevent default only when resizing or on touch devices
+    }
+    if (resize) {
       setIsDragging(false);
       setStartPosition({
         x: clientX,
@@ -97,13 +97,13 @@ const DraggableResizableDiv = () => {
         onTouchStart={(e) => handleDown(e)}
       >
         {/* Resize handlers */}
-        {/* <div className="resizer top" onMouseDown={(e) => handleDown(e, "top")} onTouchStart={(e) => handleDown(e, "top")}></div>
+        <div className="resizer top" onMouseDown={(e) => handleDown(e, "top")} onTouchStart={(e) => handleDown(e, "top")}></div>
         <div className="resizer right" onMouseDown={(e) => handleDown(e, "right")} onTouchStart={(e) => handleDown(e, "right")}></div>
         <div className="resizer bottom" onMouseDown={(e) => handleDown(e, "bottom")} onTouchStart={(e) => handleDown(e, "bottom")}></div>
         <div className="resizer left" onMouseDown={(e) => handleDown(e, "left")} onTouchStart={(e) => handleDown(e, "left")}></div>
         <div className="resizer top-left" onMouseDown={(e) => handleDown(e, "top-left")} onTouchStart={(e) => handleDown(e, "top-left")}></div>
         <div className="resizer top-right" onMouseDown={(e) => handleDown(e, "top-right")} onTouchStart={(e) => handleDown(e, "top-right")}></div>
-        <div className="resizer bottom-left" onMouseDown={(e) => handleDown(e, "bottom-left")} onTouchStart={(e) => handleDown(e, "bottom-left")}></div> */}
+        <div className="resizer bottom-left" onMouseDown={(e) => handleDown(e, "bottom-left")} onTouchStart={(e) => handleDown(e, "bottom-left")}></div>
         <div className="resizer bottom-right" onMouseDown={(e) => handleDown(e, "bottom-right")} onTouchStart={(e) => handleDown(e, "bottom-right")}></div>
       </div>
     </div>
