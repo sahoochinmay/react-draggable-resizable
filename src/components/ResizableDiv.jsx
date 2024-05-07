@@ -7,11 +7,12 @@ const DraggableResizableDiv = () => {
   const [startPosition, setStartPosition] = useState({ x: 0, y: 0 });
 
   const handleDown = (e, resize = false) => {
-    e.preventDefault();
     const clientX = e.clientX || e.touches[0].clientX;
     const clientY = e.clientY || e.touches[0].clientY;
+    if (resize || e.touches) {
+      e.preventDefault(); // Prevent default only when resizing or on touch devices
+    }
     if (resize) {
-      // Prepare for resizing
       setIsDragging(false);
       setStartPosition({
         x: clientX,
@@ -21,7 +22,6 @@ const DraggableResizableDiv = () => {
         resize,
       });
     } else {
-      // Prepare for dragging
       setIsDragging(true);
       setStartPosition({
         x: clientX - dimensions.x,
@@ -33,9 +33,11 @@ const DraggableResizableDiv = () => {
 
   const handleMove = useCallback(
     (e) => {
-      e.preventDefault();
-      const clientX = e.clientX || e.touches[0].clientX;
-      const clientY = e.clientY || e.touches[0].clientY;
+      if (isDragging || startPosition.resize) {
+        e.preventDefault(); // Prevent default actions during active dragging or resizing
+      }
+      const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+      const clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
       if (isDragging) {
         setDimensions((dims) => ({
           ...dims,
@@ -53,7 +55,6 @@ const DraggableResizableDiv = () => {
           width = Math.max(50, startWidth - (clientX - startX));
           x = dimensions.x + (clientX - startX);
           if (width === 50) {
-            // Prevent x from going beyond original when at min width
             x = dimensions.x + startWidth - 50;
           }
         }
@@ -64,7 +65,6 @@ const DraggableResizableDiv = () => {
           height = Math.max(50, startHeight - (clientY - startY));
           y = dimensions.y + (clientY - startY);
           if (height === 50) {
-            // Prevent y from going beyond original when at min height
             y = dimensions.y + startHeight - 50;
           }
         }
@@ -81,7 +81,15 @@ const DraggableResizableDiv = () => {
   };
 
   return (
-    <div className="container" onMouseMove={handleMove} onMouseUp={handleUp} onMouseLeave={handleUp} onTouchMove={handleMove} onTouchEnd={handleUp}>
+    <div
+      className="container"
+      onMouseMove={handleMove}
+      onMouseUp={handleUp}
+      onMouseLeave={handleUp}
+      onTouchMove={handleMove}
+      onTouchEnd={handleUp}
+      onTouchStart={(e) => e.preventDefault()} // Generally prevent default touch behavior for the entire container
+    >
       <div
         className="resizable"
         style={{ width: `${dimensions.width}px`, height: `${dimensions.height}px`, transform: `translate(${dimensions.x}px, ${dimensions.y}px)` }}
