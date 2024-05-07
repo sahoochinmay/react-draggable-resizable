@@ -9,10 +9,10 @@ const DraggableResizableDiv = () => {
   const handleDown = (e, resize = false) => {
     const clientX = e.clientX || e.touches[0].clientX;
     const clientY = e.clientY || e.touches[0].clientY;
-    if (resize || e.touches) {
-      e.preventDefault(); // Prevent default only when resizing or on touch devices
-    }
     if (resize) {
+      e.preventDefault(); // Prevent default on resize touchstart
+    }
+    if (resize || e.touches) {
       setIsDragging(false);
       setStartPosition({
         x: clientX,
